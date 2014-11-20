@@ -19,7 +19,7 @@ router.param('region', function (req, res, next) {
                     date: date,
                     caaml: caaml
                 };
-            req.forecast.json = jsonForecast;
+            req.forecast.json = json;
             next();
         }
 
