@@ -4,6 +4,7 @@ var router = express.Router();
 var avalx = require('./avalx');
 var regions = require('./forecast-regions');
 var areas = require('./forecast-areas');
+var avalxCache = require('./avalx-cache');
 
 router.param('region', function (req, res, next) {
     var regionId = req.params.region;
@@ -11,7 +12,25 @@ router.param('region', function (req, res, next) {
     req.region = _.find(regions.features, {id: regionId});
 
     if(req.region.properties.type === 'avalx') {
-        avalx.fetchCaamlForecast(req.region, date, function (caamlForecast) {
+        var source = req.region.properties.owner;
+        var gotForecast = function (caaml, json){
+            req.forecast = {
+                    region: regionId,
+                    date: date,
+                    caaml: caaml
+                };
+            req.forecast.json = jsonForecast;
+            next();
+        }
+
+        var reportError = function (error){
+            console.log(error);
+            res.send(500);
+        };
+
+        console.log("retrieving forecast");
+        avalxCache.getForecast(req.region, source, gotForecast, error);
+        /*avalx.fetchCaamlForecast(req.region, date, function (caamlForecast) {
             if(caamlForecast){
                 req.forecast = {
                     region: regionId,
@@ -34,7 +53,7 @@ router.param('region', function (req, res, next) {
         }, function (e) {
             console.log(e);
             res.send(500);
-        });
+        }); */
     } else {
         req.forecast = {
             json: {
