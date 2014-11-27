@@ -9,24 +9,45 @@ angular.module('avalancheCanadaApp')
           templateUrl: 'components/navbar/pushmenu.html',
           link: function(scope, ele, attrs) {
 
-              angular.element(ele).multilevelpushmenu({
-                  containersToPush: [$('#page-wrap')],
-                  menuWidth: '320px',
-                  menuHeight: '100%',
-                  collapsed: true,
-                  fullCollapse: true,
-                  backText: '',
-                  overlapWidth:60
+              $('.dropdown-toggle').click(function(e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  return false;
               });
 
-              scope.pushMenuOpen = false;
-              scope.multiExpand = function() { scope.pushMenuOpen = true; angular.element(ele).multilevelpushmenu('expand'); };
-              scope.multiCollapse = function() { scope.pushMenuOpen = false; angular.element(ele).multilevelpushmenu('collapse'); };
-              scope.itemClicked = function() { scope.pushMenuOpen = false; angular.element(ele).multilevelpushmenu('collapse'); };
 
-              //! \todo is this nescessary ?
-              angular.element(ele).multilevelpushmenu('option', 'menuHeight', $document.height());
-              angular.element(ele).multilevelpushmenu('redraw');
+              $(".dropdown-menu > li > a.trigger").on("click",function(e){
+                  var current=$(this).next();
+                  var grandparent=$(this).parent().parent();
+                  if($(this).hasClass('left-caret')||$(this).hasClass('right-caret'))
+                      $(this).toggleClass('right-caret left-caret');
+                  grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+                  grandparent.find(".sub-menu:visible").not(current).hide();
+                  current.toggle();
+                  e.stopPropagation();
+              });
+              $(".dropdown-menu > li > a:not(.trigger)").on("click",function(e){
+
+                      e.stopPropagation()
+                  var root=$(this).closest('.dropdown');
+                  root.find('.left-caret').toggleClass('right-caret left-caret');
+                  root.find('.sub-menu:visible').hide();
+              });
+              if($('#map').is(':visible')){
+                  $('.full-height,.map_content').css({'min-height':$(window).height()-75+'px',height:$(window).height()-75+'px'})
+
+                  $(window).on('resize',function(){
+                      if($(window).width()<1024){
+                          $('.full-height,.map_content').css({'min-height':$(window).height()-75+'px',height:$(window).height()-75+'px'})
+                      }
+                      else{
+                          $('.full-height,.map_content').height('auto');
+                      }
+
+                  })
+              }
+
+
           }
       };
   })
@@ -70,7 +91,7 @@ angular.module('avalancheCanadaApp')
       };
   })
 
-  .controller('NavbarCtrl', function ($scope, $location, $document) { //, auth, store
+  .controller('NavbarCtrl', function ($scope, $location, $document, auth, store) {
 
 
     $scope.forecastRegions = [{'name':'Banff Yoho & Kootenay National Park', 'link':'<a href="/forecasts/banff-yoho-kootenay" data-toggle="collapse" data-target=".navbar-collapse" >Banff Yoho & Kootenay National Park</a>'},
@@ -118,7 +139,6 @@ angular.module('avalancheCanadaApp')
                     {'url':'#resources','display':'Resources'},
                     {'url':'#curriculum','display':'Curriculum'}];
 
-    /*
     $scope.login = function() {
         auth.signin({}, function(profile, token) {
           // Success callback
@@ -137,6 +157,5 @@ angular.module('avalancheCanadaApp')
       store.remove('token');
       $scope.isAuthenticated = false;
     };
-    */
 
   });

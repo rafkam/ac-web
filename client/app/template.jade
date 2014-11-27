@@ -1,6 +1,6 @@
-div(ng-include='"components/navbar/navbar.html"')
+div#nav_content(ng-include='"components/navbar/navbar.html"')
 
-div#alert(ng-controller="HighlighCtrl" collapse="false")
-    ng-toast
+div#alert(ng-controller="AlertCtrl" collapse="true")
+    alert( type='{{alert.type}}') {{alert.msg}}
 
-div(ui-view='' ng-class='pageClass' autoscroll='true')
+div.full_height.map_content(ui-view='' ng-class='pageClass ' autoscroll='true')
