@@ -39,7 +39,10 @@ angular.module('avalancheCanadaApp', [
             .state('ac', {
                 abstract: true,
                 url: '/',
-                templateUrl: 'app/template.html'
+                templateUrl: 'app/template.html',
+                controller: ['$scope','$state',  function($scope, $state){
+                    $scope.url = $state.href($state.current.name, $state.params, {absolute: true, inherit: true});
+                }]
             })
         ;
 
@@ -112,11 +115,47 @@ angular.module('avalancheCanadaApp', [
         });
     })
 
+<<<<<<< HEAD
     .controller('AlertCtrl', function ($scope) {
         $scope.alert = { type: 'danger', msg: 'SPAW Example !' };
         //{ type: 'success', msg: 'Well done! You successfully read this important alert message.
     })
 ;
+=======
+    .controller('HighlighCtrl', function (ngToast, Prismic, $log) {
+
+        var yesterday = moment.utc(moment().startOf('day').subtract(1,'days')).format('YYYY-MM-DD');
+        var tomorrow  = moment.utc(moment().startOf('day').add(1,'days')).format('YYYY-MM-DD');
+
+        Prismic.ctx().then(function(ctx){
+
+            var query =  '[[:d = at(document.type, "highlight")]';
+                query += '[:d = date.before(my.highlight.start_date,"'+tomorrow+'")]';
+                query += '[:d = date.after(my.highlight.end_date,"'+yesterday+'")]]';
+            $log.debug(query);
+            ctx.api.form('everything').query(query)
+                    .ref(ctx.ref).submit(function(err, documents){
+                if (err) {
+                    $log.error('error getting highlight from prismic');
+                }
+
+                else {
+                    var highlight = documents.results[0];
+                    if(highlight){
+                        ngToast.create({
+                            'content': highlight.getStructuredText('highlight.description').asHtml(ctx),
+                            'class': highlight.getText('highlight.style') || 'danger',
+                            'dismissOnTimeout': false,
+                            'dismissButton': true,
+                            'dismissButtonHtml': '&times;'
+                        });
+                    }
+                }
+
+            });
+        });
+    });
+>>>>>>> 739d1574eb3ad824709e0650a7b083cea2deaf47
 
 
 

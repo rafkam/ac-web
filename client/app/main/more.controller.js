@@ -33,7 +33,7 @@ angular.module('avalancheCanadaApp')
 
         var queryStr = '[[:d = at(document.type, "news")]' + sledQuery + ']';
         ctx.api.form('everything').query(queryStr)
-                                    .orderings('[my.news.date]')
+                                    .orderings('[my.news.date desc]')
                                         .ref(ctx.ref).submit(function(err, documents){
             if (err) {
                 $log.error('error getting news from prismic');
@@ -43,7 +43,7 @@ angular.module('avalancheCanadaApp')
                 queryStr = '[[:d = at(document.type, "news")] [:d = any(document.tags, ["featured"])]' + sledQuery + ']';
                 $log.debug(queryStr);
                 ctx.api.form('everything').query(queryStr)
-                                            .orderings('[my.news.date]')
+                                            .orderings('[my.news.date desc]')
                                                 .ref(ctx.ref).submit(function(err, documents){
                     if (err) {
                         $log.error('error getting featured news from prismic');

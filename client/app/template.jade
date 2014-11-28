@@ -1,6 +1,11 @@
 div#nav_content(ng-include='"components/navbar/navbar.html"')
 
+<<<<<<< HEAD
 div#alert(ng-controller="AlertCtrl" collapse="true")
     alert( type='{{alert.type}}') {{alert.msg}}
+=======
+div(ng-controller="HighlighCtrl" collapse="false")
+    ng-toast
+>>>>>>> 739d1574eb3ad824709e0650a7b083cea2deaf47
 
 div.full_height.map_content(ui-view='' ng-class='pageClass ' autoscroll='true')
