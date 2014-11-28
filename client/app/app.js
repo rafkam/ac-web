@@ -115,13 +115,7 @@ angular.module('avalancheCanadaApp', [
         });
     })
 
-<<<<<<< HEAD
-    .controller('AlertCtrl', function ($scope) {
-        $scope.alert = { type: 'danger', msg: 'SPAW Example !' };
-        //{ type: 'success', msg: 'Well done! You successfully read this important alert message.
-    })
-;
-=======
+
     .controller('HighlighCtrl', function (ngToast, Prismic, $log) {
 
         var yesterday = moment.utc(moment().startOf('day').subtract(1,'days')).format('YYYY-MM-DD');
@@ -155,7 +149,7 @@ angular.module('avalancheCanadaApp', [
             });
         });
     });
->>>>>>> 739d1574eb3ad824709e0650a7b083cea2deaf47
+
 
 
 
